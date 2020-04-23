@@ -1,3 +1,3 @@
 # SyntheticDataGenerationBlender
 Domain Randomization
-For now just drag it into your folder location. Bruh
+/nFor now just drag it into your folder location. Bruh
