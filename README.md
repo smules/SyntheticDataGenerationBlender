@@ -9,7 +9,9 @@ blender -P generate_images.py
 ```
 # Results
 Here are three images that show what is produced
-###put images here
+![3003_0001](/images/3003_0001.png)
+![3003_0002](/images/3003_0002.png)
+![2339_0001](/images/2339_0001.png)
 # Credits
 [LDraw](https://www.ldraw.org/)<br />
 [TobyLobster](https://github.com/TobyLobster) - creator of loadldraw<br />
