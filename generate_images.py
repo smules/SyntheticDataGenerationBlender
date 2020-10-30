@@ -26,7 +26,12 @@ class Render():
         self.examples_quantity= examples_quantity
         self.examples_res = examples_res
         self.num_lights  =num_lights
+        
+        
     def set_render_properties():
+        # Sets the Blender proterties like resolution
+        #film_transparent removes a pink tint caused by the loadldraw library
+        #color_mode = 'RGBA' includes alpha so the background can be transparant, outputs .png
         bpy.context.scene.render.resolution_x = 500
         bpy.context.scene.render.resolution_y = 500
         bpy.context.scene.render.resolution_percentage = 100
@@ -34,28 +39,36 @@ class Render():
         bpy.context.scene.render.image_settings.color_mode = 'RGBA'
 
     def delete_scene():
+        #Deletes the whole scene so a new one can be made
         bpy.ops.object.select_all(action='SELECT')
         bpy.ops.object.delete()
-        #might need to make it so it only deletes the lego piece and lights but not the camera
 
     def insert_camera():
+        #Inserts a new camera, called when scene is being generated
         scene=bpy.context.scene
         cam=bpy.data.cameras.new('camera')
         cam.lens = 18
         cam_obj = bpy.data.objects.new('camera', cam)
+        #randomizes the location of the camera
         cam_obj.location = (random.uniform(.5,1.5), random.uniform(-.5,-1.5), random.uniform(.5,1.5))
+        #Points the camera to the middle
         cam_obj.rotation_euler = (1.11003293, 0,.81498132 )
         scene.collection.objects.link(cam_obj)
 
     def insert_model(model_location, pieces, model_names):
+        #Loads a new model using the loadldraw library
         loadldraw.loadFromFile('test', model_location+model_names[pieces])
         bpy.data.objects['LegoGroundPlane'].location.z+=-1.0
 
     def lights(num_lights):
+        #Inserts lights
+        #Set number of lights; set to 3 for debug, but line directly below can be removed
         num_lights = 3
         bpy.ops.object.select_by_type(type='LIGHT')
         bpy.ops.object.delete()
+        #Finds the amount of lights that are going to be used
         lights = random.randint(1, num_lights)
+        #Makes new lights the randomized amount of time
         for num in range(0, lights):
             light_data = bpy.data.lights.new(name="light_"+str(num), type='POINT')
             light_data.energy = 30
@@ -67,18 +80,23 @@ class Render():
             dg.update()
     
     def rotate_piece(pieces, model_names):
+        #Selects object and randomized its rotation
         bpy.data.objects['00000_'+model_names[pieces]].select_set(True)
         bpy.context.active_object.rotation_mode = 'XYZ'
         bpy.context.active_object.rotation_euler=(random.random()*math.radians(360), random.random()*math.radians(360), random.random()*math.radians(360))
 
     def render_image(filepath, name, camera_name='camera'):
+        #Finally renders the image; not to be confused with def render(), which is main method
         objects = bpy.data.objects
+        #Saves to filepath
         bpy.context.scene.render.filepath = filepath+name
+        #Selects camera
         camera = objects[camera_name]
         bpy.context.scene.camera = camera
         bpy.ops.render.render(write_still=True)
     
     def render():
+        #Coordinates the whole program, this is the main method once everything is importd
         Render.set_render_properties()
         for pieces in range(0, number_of_models):
             Render.delete_scene()
