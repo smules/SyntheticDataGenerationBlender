@@ -108,8 +108,11 @@ class Render():
                 name=model_names[pieces]+'_'+str(ex)
                 Render.render_image(save_location, name)
 
+#######################
+#Configurations
+#######################
 
-
+                
 model_location = '/home/blender/Desktop/Test/Parts sample/'
 save_location = '/home/blender/Desktop/Test/Image save/'
 number_of_models = len(os.listdir(model_location))
