@@ -4,8 +4,6 @@ generate_images = os.path.dirname(os.path.realpath(__file__)) + '/'
 sys.path.append(generate_images)
 sys.path.append('/usr/local/lib/python3.5/dist-packages')
 sys.path.insert(0, '/home/blender/Desktop/ImportLDraw-master/loadldraw/')
-sys.path.append
-#from utils.upper_level_coordinator import Coordinator
 import random
 import bpy
 import numpy
