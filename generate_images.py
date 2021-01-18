@@ -2,8 +2,8 @@ import os
 import sys
 generate_images = os.path.dirname(os.path.realpath(__file__)) + '/'
 sys.path.append(generate_images)
-sys.path.append('/usr/local/lib/python3.5/dist-packages')
-sys.path.insert(0, '/home/blender/Desktop/ImportLDraw-master/loadldraw/')
+#sys.path.append('/usr/local/lib/python3.5/dist-packages')
+#sys.path.insert(0, '/home/blender/Desktop/ImportLDraw-master/loadldraw/')
 import random
 import bpy
 import numpy
@@ -11,11 +11,11 @@ import math
 from mathutils import Vector
 from numpy.random import uniform
 from numpy.random import randint
-import loadldraw
+#import loadldraw
 
 
 class Render():
-    def __init__(self, model_location, save_location, number_of_models, model_names,
+    def __init__(self, model_location, save_location,number_of_models,model_names,
              examples_quantity, examples_res, num_lights):
         self.model_location =model_location
         self.save_location =save_location
@@ -24,6 +24,7 @@ class Render():
         self.examples_quantity= examples_quantity
         self.examples_res = examples_res
         self.num_lights  =num_lights
+#        self.model_name = model_name
         
         
     def set_render_properties():
@@ -55,8 +56,8 @@ class Render():
 
     def insert_model(model_location, pieces, model_names):
         #Loads a new model using the loadldraw library
-        loadldraw.loadFromFile('test', model_location+model_names[pieces])
-        bpy.data.objects['LegoGroundPlane'].location.z+=-1.0
+        bpy.ops.import_scene.importldraw(filepath="C:\\Users\\Fran\\Desktop\\Lego Project\\ldraw\\parts\\"+model_names)
+        bpy.data.objects['LegoGroundPlane'].location.z+=-5.0
 
     def lights(num_lights):
         #Inserts lights
@@ -77,17 +78,18 @@ class Render():
             dg = bpy.context.evaluated_depsgraph_get() 
             dg.update()
     
-    def rotate_piece(pieces, model_names):
+    def rotate_piece(model_names):
         #Selects object and randomized its rotation
-        bpy.data.objects['00000_'+model_names[pieces]].select_set(True)
+        bpy.ops.object.select_all(action='DESELECT')
+        bpy.context.view_layer.objects.active = bpy.data.objects['00000_'+model_names]
         bpy.context.active_object.rotation_mode = 'XYZ'
         bpy.context.active_object.rotation_euler=(random.random()*math.radians(360), random.random()*math.radians(360), random.random()*math.radians(360))
 
-    def render_image(filepath, name, camera_name='camera'):
+    def render_image(filepath, model_names, name, camera_name='camera'):
         #Finally renders the image; not to be confused with def render(), which is main method
         objects = bpy.data.objects
         #Saves to filepath
-        bpy.context.scene.render.filepath = filepath+name
+        bpy.context.scene.render.filepath = filepath+model_names+'\\'+name
         #Selects camera
         camera = objects[camera_name]
         bpy.context.scene.camera = camera
@@ -99,26 +101,28 @@ class Render():
         for pieces in range(0, number_of_models):
             Render.delete_scene()
             Render.insert_camera()
-            Render.insert_model(model_location, pieces, model_names)
+            Render.insert_model(model_location, pieces, model_names[pieces])
             for ex in range(0, examples_quantity):
                 Render.lights(num_lights)
-                Render.rotate_piece(pieces, model_names)
+                Render.rotate_piece(model_names[pieces])
                 name=model_names[pieces]+'_'+str(ex)
-                Render.render_image(save_location, name)
+                Render.render_image(save_location,model_names[pieces], name)
 
 #######################
 #Configurations
 #######################
 
                 
-model_location = '/home/blender/Desktop/Test/Parts sample/'
-save_location = '/home/blender/Desktop/Test/Image save/'
+model_location = 'C:\\Users\\Fran\\Desktop\\Lego Project\\pieces\\'
+save_location = 'D:\\Save_Images\\'
 number_of_models = len(os.listdir(model_location))
 model_names = os.listdir(model_location)
-examples_quantity = 10
+examples_quantity = 300
 examples_res = (128,128)
 num_lights = 3
-Render(model_location, save_location, number_of_models, model_names,
+#new stuff######################
+#model_name='4073.dat'
+#new stuff######################
+Render(model_location, save_location,number_of_models,model_names,
             examples_quantity, examples_res, num_lights)
 Render.render()
-
