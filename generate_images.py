@@ -1,9 +1,6 @@
 import os
 import sys
 generate_images = os.path.dirname(os.path.realpath(__file__)) + '/'
-sys.path.append(generate_images)
-sys.path.append('/usr/local/lib/python3.5/dist-packages')
-sys.path.insert(0, '/home/blender/Desktop/ImportLDraw-master/loadldraw/')
 import random
 import bpy
 import numpy
@@ -16,22 +13,23 @@ import loadldraw
 
 class Render():
     def __init__(self, model_location, save_location, number_of_models, model_names,
-             examples_quantity, examples_res, num_lights):
+             examples_quantity, examples_res_x, examples_res_y, num_lights):
         self.model_location =model_location
         self.save_location =save_location
         self.number_of_models = number_of_models
         self.model_names = model_names
         self.examples_quantity= examples_quantity
-        self.examples_res = examples_res
+        self.examples_res_x = examples_res_x
+        self.examples_res_y = examples_res_y
         self.num_lights  =num_lights
         
         
-    def set_render_properties():
+    def set_render_properties(x,y):
         # Sets the Blender proterties like resolution
         #film_transparent removes a pink tint caused by the loadldraw library
         #color_mode = 'RGBA' includes alpha so the background can be transparant, outputs .png
-        bpy.context.scene.render.resolution_x = 500
-        bpy.context.scene.render.resolution_y = 500
+        bpy.context.scene.render.resolution_x = x
+        bpy.context.scene.render.resolution_y = y
         bpy.context.scene.render.resolution_percentage = 100
         bpy.context.scene.render.film_transparent = True
         bpy.context.scene.render.image_settings.color_mode = 'RGBA'
@@ -56,6 +54,7 @@ class Render():
     def insert_model(model_location, pieces, model_names):
         #Loads a new model using the loadldraw library
         loadldraw.loadFromFile('test', model_location+model_names[pieces])
+        #Moves backplane down so piece can freely rotate
         bpy.data.objects['LegoGroundPlane'].location.z+=-1.0
 
     def lights(num_lights):
@@ -95,7 +94,7 @@ class Render():
     
     def render():
         #Coordinates the whole program, this is the main method once everything is importd
-        Render.set_render_properties()
+        Render.set_render_properties(examples_res_x,examples_res_y)
         for pieces in range(0, number_of_models):
             Render.delete_scene()
             Render.insert_camera()
@@ -111,14 +110,15 @@ class Render():
 #######################
 
                 
-model_location = '/home/blender/Desktop/Test/Parts sample/'
-save_location = '/home/blender/Desktop/Test/Image save/'
+model_location = ''#Directory of models
+save_location = ''#Save directory
 number_of_models = len(os.listdir(model_location))
 model_names = os.listdir(model_location)
-examples_quantity = 10
-examples_res = (128,128)
+examples_quantity = 300
+examples_res_x = 500
+examples_res_y = 500
 num_lights = 3
 Render(model_location, save_location, number_of_models, model_names,
-            examples_quantity, examples_res, num_lights)
+            examples_quantity, examples_res_x, examples_res_y, num_lights)
 Render.render()
 
