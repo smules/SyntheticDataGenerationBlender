@@ -2,11 +2,9 @@
 This is a Blender script with the sole purpose of mass producing Domain Randomized. The purpose is to train TensorFlow to identify LEGO pieces.
 
 # Usage
-First download generate_images.py. Open the .py file and configure it to your computer. Currently it is set for Linux, with the Linux filesystem format. You will also have to dowload the LDraw library, which a 3D model of every LEGO piece ever produced, and the loadldraw library, which enables you to load you LDraw files into Blender. <br />Note: loadldraw only works on Blender 2.79 and 2.81, so any new version of Blender is incompatable.
-#### Finally, when you are ready to start the program, run in terminal or equivelant this command
-```python
-blender -P generate_images.py
-```
+First download generate_images.py. Open the .py file and configure it to your specs, like resolution and model directory. You will also have to dowload the LDraw library of models, and the loadldraw add-on, which enables you to load you LDraw files into Blender.
+#### Finally, when you are ready to start the program, open Blender
+Click on the scripting tab on the top and load the .py file. Run the script
 # Results
 Here are three images that show what is produced
 ![3003_0001](/images/3003_0001.png)
